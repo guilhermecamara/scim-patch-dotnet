@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonPatchForDotnet", "src\JsonPatchForDotnet\JsonPatchForDotnet.csproj", "{ED75E277-F1BE-4EE5-A498-64F91DDE8788}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonPatchForDotnet.UnitTests", "tests\JsonPatchForDotnet.UnitTests\JsonPatchForDotnet.UnitTests.csproj", "{19F2FE83-CC3D-43CD-8092-35494CA42CFF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ED75E277-F1BE-4EE5-A498-64F91DDE8788}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED75E277-F1BE-4EE5-A498-64F91DDE8788}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED75E277-F1BE-4EE5-A498-64F91DDE8788}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED75E277-F1BE-4EE5-A498-64F91DDE8788}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19F2FE83-CC3D-43CD-8092-35494CA42CFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19F2FE83-CC3D-43CD-8092-35494CA42CFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19F2FE83-CC3D-43CD-8092-35494CA42CFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19F2FE83-CC3D-43CD-8092-35494CA42CFF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
