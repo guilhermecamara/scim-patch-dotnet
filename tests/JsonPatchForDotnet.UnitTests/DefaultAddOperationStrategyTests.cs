@@ -12,14 +12,12 @@ public class DefaultAddOperationStrategyTests
         var testInstance = new TestClass() { Value = 100 };
         var targetProperty = typeof(TestClass).GetProperty(nameof(TestClass.Value))!;
         var operationNode = new OperationNode(
+            operationStrategy: new DefaultAddOperationStrategy(),
             instance: testInstance,
             targetPropertyInfo: targetProperty,
             sourcePropertyInfo: null,
             value: 42
-        )
-        {
-            OperationStrategy = new DefaultAddOperationStrategy()
-        };
+        );
 
         // Act
         var result = await operationNode.TryApplyAsync();
@@ -36,14 +34,12 @@ public class DefaultAddOperationStrategyTests
         var testInstance = new TestClass();
         var targetProperty = typeof(TestClass).GetProperty(nameof(TestClass.Value))!;
         var operationNode = new OperationNode(
+            operationStrategy: new DefaultAddOperationStrategy(),
             instance: testInstance,
             targetPropertyInfo: targetProperty,
             sourcePropertyInfo: null,
             value: "42"
-        )
-        {
-            OperationStrategy = new DefaultAddOperationStrategy()
-        };
+        );
 
         // Act
         var result = await operationNode.TryApplyAsync();
@@ -60,14 +56,12 @@ public class DefaultAddOperationStrategyTests
         var testInstance = new TestClass { Value = 42 };
         var targetProperty = typeof(TestClass).GetProperty(nameof(TestClass.Value))!;
         var operationNode = new OperationNode(
+            operationStrategy: new DefaultAddOperationStrategy(),
             instance: testInstance,
             targetPropertyInfo: targetProperty,
             sourcePropertyInfo: null,
             value: 100
-        )
-        {
-            OperationStrategy = new DefaultAddOperationStrategy()
-        };
+        );
 
         // Act
         await operationNode.TryApplyAsync(); // Apply new value
@@ -94,14 +88,12 @@ public class DefaultAddOperationStrategyTests
         var testInstance = new TestClassWithNullableList { Items = null };
         var targetProperty = typeof(TestClassWithNullableList).GetProperty(nameof(TestClassWithNullableList.Items))!;
         var operationNode = new OperationNode(
+            operationStrategy: new DefaultAddOperationStrategy(),
             instance: testInstance,
             targetPropertyInfo: targetProperty,
             sourcePropertyInfo: null,
             value: 42
-        )
-        {
-            OperationStrategy = new DefaultAddOperationStrategy()
-        };
+        );
 
         // Act
         await operationNode.TryApplyAsync();
@@ -119,14 +111,12 @@ public class DefaultAddOperationStrategyTests
         var testInstance = new TestClassWithNullableList { Items = new List<int>() };
         var targetProperty = typeof(TestClassWithNullableList).GetProperty(nameof(TestClassWithNullableList.Items))!;
         var operationNode = new OperationNode(
+            operationStrategy: new DefaultAddOperationStrategy(),
             instance: testInstance,
             targetPropertyInfo: targetProperty,
             sourcePropertyInfo: null,
             value: 42
-        )
-        {
-            OperationStrategy = new DefaultAddOperationStrategy()
-        };
+        );
 
         // Act
         await operationNode.TryApplyAsync();
@@ -143,14 +133,12 @@ public class DefaultAddOperationStrategyTests
         var testInstance = new TestClassWithNullableList { Items = new List<int> { 1 } };
         var targetProperty = typeof(TestClassWithNullableList).GetProperty(nameof(TestClassWithNullableList.Items))!;
         var operationNode = new OperationNode(
+            operationStrategy: new DefaultAddOperationStrategy(),
             instance: testInstance,
             targetPropertyInfo: targetProperty,
             sourcePropertyInfo: null,
             value: 42
-        )
-        {
-            OperationStrategy = new DefaultAddOperationStrategy()
-        };
+        );
 
         // Act
         await operationNode.TryApplyAsync();
@@ -168,14 +156,12 @@ public class DefaultAddOperationStrategyTests
         var testInstance = new TestClassWithNullableList { Items = new List<int> { 1 } };
         var targetProperty = typeof(TestClassWithNullableList).GetProperty(nameof(TestClassWithNullableList.Items))!;
         var operationNode = new OperationNode(
+            operationStrategy: new DefaultAddOperationStrategy(),
             instance: testInstance,
             targetPropertyInfo: targetProperty,
             sourcePropertyInfo: null,
             value: 42
-        )
-        {
-            OperationStrategy = new DefaultAddOperationStrategy()
-        };
+        );
 
         // Act
         await operationNode.TryApplyAsync(); // Apply new value
@@ -193,14 +179,12 @@ public class DefaultAddOperationStrategyTests
         var testInstance = new TestClassWithNullableList { Items = null };
         var targetProperty = typeof(TestClassWithNullableList).GetProperty(nameof(TestClassWithNullableList.Items))!;
         var operationNode = new OperationNode(
+            operationStrategy: new DefaultAddOperationStrategy(),
             instance: testInstance,
             targetPropertyInfo: targetProperty,
             sourcePropertyInfo: null,
             value: 1
-        )
-        {
-            OperationStrategy = new DefaultAddOperationStrategy()
-        };
+        );
 
         // Act
         await operationNode.TryApplyAsync(); // Apply new value
@@ -226,14 +210,12 @@ public class DefaultAddOperationStrategyTests
         var testInstance = new TestClassWithList { Items = null };
         var targetProperty = typeof(TestClassWithList).GetProperty(nameof(TestClassWithList.Items))!;
         var operationNode = new OperationNode(
+            operationStrategy: new DefaultAddOperationStrategy(),
             instance: testInstance,
             targetPropertyInfo: targetProperty,
             sourcePropertyInfo: null,
             value: 42
-        )
-        {
-            OperationStrategy = new DefaultAddOperationStrategy()
-        };
+        );
 
         // Act
         await operationNode.TryApplyAsync();
@@ -251,14 +233,12 @@ public class DefaultAddOperationStrategyTests
         var testInstance = new TestClassWithList { Items = new List<int>() };
         var targetProperty = typeof(TestClassWithList).GetProperty(nameof(TestClassWithList.Items))!;
         var operationNode = new OperationNode(
+            operationStrategy: new DefaultAddOperationStrategy(),
             instance: testInstance,
             targetPropertyInfo: targetProperty,
             sourcePropertyInfo: null,
             value: 42
-        )
-        {
-            OperationStrategy = new DefaultAddOperationStrategy()
-        };
+        );
 
         // Act
         await operationNode.TryApplyAsync();
@@ -275,14 +255,12 @@ public class DefaultAddOperationStrategyTests
         var testInstance = new TestClassWithList { Items = new List<int> { 1 } };
         var targetProperty = typeof(TestClassWithList).GetProperty(nameof(TestClassWithList.Items))!;
         var operationNode = new OperationNode(
+            operationStrategy: new DefaultAddOperationStrategy(),
             instance: testInstance,
             targetPropertyInfo: targetProperty,
             sourcePropertyInfo: null,
             value: 42
-        )
-        {
-            OperationStrategy = new DefaultAddOperationStrategy()
-        };
+        );
 
         // Act
         await operationNode.TryApplyAsync();
@@ -300,14 +278,12 @@ public class DefaultAddOperationStrategyTests
         var testInstance = new TestClassWithList { Items = new List<int> { 1 } };
         var targetProperty = typeof(TestClassWithList).GetProperty(nameof(TestClassWithList.Items))!;
         var operationNode = new OperationNode(
+            operationStrategy: new DefaultAddOperationStrategy(),
             instance: testInstance,
             targetPropertyInfo: targetProperty,
             sourcePropertyInfo: null,
             value: 42
-        )
-        {
-            OperationStrategy = new DefaultAddOperationStrategy()
-        };
+        );
 
         // Act
         await operationNode.TryApplyAsync(); // Apply new value

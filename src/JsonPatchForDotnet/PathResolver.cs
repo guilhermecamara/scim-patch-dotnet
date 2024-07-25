@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,7 +6,13 @@ namespace JsonPatchForDotnet
 {
     public static class PathResolver
     {
-        public static IEnumerable<object> GetProperties(this object o, string[] paths)
+        /// <summary>
+        /// This will process the path and filters to find all relevant properties.
+        /// </summary>
+        /// <param name="o">The instance.</param>
+        /// <param name="paths">Each part of the object path as an array.</param>
+        /// <returns>All objects of o that satisfy the path and filters specified.</returns>
+        public static IList<object> GetProperties(this object o, string[] paths)
         {
             var objects = new List<object>();
 
@@ -40,7 +45,7 @@ namespace JsonPatchForDotnet
             return objects;
         }
         
-        public static IEnumerable<object> GetProperties(this object o, string path)
+        internal static IEnumerable<object> GetProperties(this object o, string path)
         {
             var (root, filter) = GetRootPath(path);
 

@@ -16,7 +16,8 @@ namespace JsonPatchForDotnet
             }
             
             return type.IsGenericType &&
-                   typeof(IEnumerable).IsAssignableFrom(type.GetGenericTypeDefinition());
+                   (typeof(IEnumerable<>).IsAssignableFrom(type.GetGenericTypeDefinition())
+                   || typeof(IEnumerable).IsAssignableFrom(type.GetGenericTypeDefinition()));
         }
         
         public static bool IsIList(Type type)
@@ -29,7 +30,8 @@ namespace JsonPatchForDotnet
             }
             
             return type.IsGenericType &&
-                   typeof(IList<>).IsAssignableFrom(type.GetGenericTypeDefinition());
+                   (typeof(IList<>).IsAssignableFrom(type.GetGenericTypeDefinition())
+                   || typeof(IList).IsAssignableFrom(type.GetGenericTypeDefinition()));
         }
     }
 }

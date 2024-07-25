@@ -8,10 +8,10 @@ namespace JsonPatchForDotnet
 {
     public partial class Operations
     {
-        public static IList<Operation> FromJson(string json) =>
+        internal static IList<Operation> FromJson(string json) =>
             JsonConvert.DeserializeObject<List<Operation>>(json, Operations.Converter.Settings) 
             ?? throw new InvalidOperationException();
-        
+
         internal static class Converter
         {
             public static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
