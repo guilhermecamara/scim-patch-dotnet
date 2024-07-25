@@ -19,7 +19,7 @@ namespace JsonPatchForDotnet
                 var childPaths = paths.Skip(1).ToArray();
                 foreach (var child in children)
                 {
-                    if (IsIEnumerable(child.GetType()))
+                    if (Utils.IsIEnumerable(child.GetType()))
                     {
                         foreach (var item in (IEnumerable)child)
                         {
@@ -46,7 +46,7 @@ namespace JsonPatchForDotnet
 
             var type = o.GetType();
             
-            if (IsIEnumerable(type))
+            if (Utils.IsIEnumerable(type))
             {
                 // TODO apply filter
 
@@ -65,18 +65,6 @@ namespace JsonPatchForDotnet
         {
             var root = path.Split('[');
             return (root.ElementAt(0), root.ElementAtOrDefault(1));
-        }
-
-        private static bool IsIEnumerable(Type type)
-        {
-            return type.IsGenericType &&
-                   typeof(IEnumerable).IsAssignableFrom(type.GetGenericTypeDefinition());
-        }
-        
-        private static bool IsIList(Type type)
-        {
-            return type.IsGenericType &&
-                   typeof(IList).IsAssignableFrom(type.GetGenericTypeDefinition());
         }
     }
 }
