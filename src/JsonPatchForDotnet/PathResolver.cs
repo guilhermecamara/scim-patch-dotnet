@@ -68,8 +68,16 @@ namespace JsonPatchForDotnet
 
         private static (string, string?) GetRootPath(string path)
         {
-            var root = path.Split('[');
-            return (root.ElementAt(0), root.ElementAtOrDefault(1));
+            var bracketStart = path.IndexOf('[');
+            var bracketEnd = path.IndexOf(']');
+            string? filter = null;
+            var root = path;
+            if (bracketStart > 1 && bracketEnd + 1 > bracketStart - 1)
+            {
+                root = path.Substring(0, bracketStart);
+                filter = path.Substring(bracketStart + 1, bracketEnd - bracketStart - 1);
+            }
+            return (root, filter);
         }
     }
 }
