@@ -703,16 +703,6 @@ namespace JsonPatchForDotnet.Queries
                     .Invoke(null, new object[] { body, new[] {argument} });
         }
 
-        protected static string GetSchema(ScimFilterParser.AttrPathContext context)
-        {
-            if (context.SCHEMA() != null)
-            {
-                return context.SCHEMA().GetText().TrimEnd(':');
-            }
-
-            return null;
-        }
-
         private static IDictionary<string, MethodInfo> CreateMethodCache()
         {
             var methodCache = new Dictionary<string, MethodInfo>();

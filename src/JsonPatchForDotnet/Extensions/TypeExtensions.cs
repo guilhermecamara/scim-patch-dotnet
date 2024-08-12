@@ -7,7 +7,7 @@ namespace JsonPatchForDotnet.Extensions
 
     public static class TypeExtensions
     {
-        public static bool IsNonStringEnumerable(this Type type)
+        public static bool IsNonStringEnumerable(this Type? type)
         {
             if (type == null) return false;
 
@@ -21,7 +21,7 @@ namespace JsonPatchForDotnet.Extensions
                                 (interfaceType == typeof (IEnumerable))));
         }
 
-        public static Type GetEnumerableType(this Type type)
+        public static Type? GetEnumerableType(this Type type)
         {
             if (type == null) throw new ArgumentNullException();
 
@@ -38,14 +38,14 @@ namespace JsonPatchForDotnet.Extensions
             return genericEnumerableInterface;
         }
 
-        public static object GetDefaultValue(this Type type)
+        public static object? GetDefaultValue(this Type type)
         {
             return type.IsValueType
                 ? Activator.CreateInstance(type)
                 : null;
         }
 
-        public static bool IsTerminalObject(this Type type)
+        public static bool IsTerminalObject(this Type? type)
         {
             if (type == null) return true;
 

@@ -1,6 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using Antlr4.Runtime;
+using JsonPatchForDotnet.Extensions;
+using JsonPatchForDotnet.Queries;
+using ScimPatch.Antlr;
 
 namespace JsonPatchForDotnet
 {
@@ -51,19 +57,48 @@ namespace JsonPatchForDotnet
 
             var type = o.GetType();
             
-            if (Utils.IsIEnumerable(type))
-            {
-                // TODO apply filter
-
+            if (type.IsNonStringEnumerable())
+            { 
                 foreach (var item in (IEnumerable<object>)o)
                 {
-                    yield return item.GetType().GetProperty(root)!.GetValue(item);
+                    yield return ApplyFilterIfPossible(item.GetType().GetProperty(root)!.GetValue(item), filter);
                 }
             }
             else
             {
-                yield return o.GetType().GetProperty(root)!.GetValue(o);
+                yield return ApplyFilterIfPossible(o.GetType().GetProperty(root)!.GetValue(o), filter);
             }
+        }
+
+        private static object ApplyFilterIfPossible(object o, string? filter)
+        {
+            var type = o.GetType();
+
+            if (type.IsNonStringEnumerable() && !string.IsNullOrEmpty(filter))
+            {
+                var enumerableType = type.GetGenericArguments()[0];
+                var parser = CreateParser(filter);
+                var scimFilterVisitorGenericType = typeof(ScimFilterVisitor<>).MakeGenericType(enumerableType);
+                object visitor = Activator.CreateInstance(scimFilterVisitorGenericType);
+                var filterContext = parser.filter();
+                var expression = (LambdaExpression)scimFilterVisitorGenericType
+                    .GetMethod("Visit")!
+                    .Invoke(visitor, new object[] { filterContext });
+                var compiledResult = expression.Compile();
+                var enumerable = (IEnumerable<object>)o;
+                return enumerable.Where(e => (bool)compiledResult.DynamicInvoke(e));
+            }
+
+            return o;
+        }
+        
+        private static ScimFilterParser CreateParser(string filter)
+        {
+            var inputStream = new AntlrInputStream(filter);
+            var speakLexer = new ScimFilterLexer(inputStream);
+            var commonTokenStream = new CommonTokenStream(speakLexer);
+            var speakParser = new ScimFilterParser(commonTokenStream);
+            return speakParser;   
         }
 
         private static (string, string?) GetRootPath(string path)

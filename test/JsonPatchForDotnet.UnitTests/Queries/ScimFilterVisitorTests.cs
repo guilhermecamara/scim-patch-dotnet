@@ -10,7 +10,7 @@ public class ScimFilterVisitorTests
     // A simple test resource class
     public class TestResource
     {
-        public string Property { get; set; }
+        public string Property { get; set; } = null!;
         public int Number { get; set; }
         public bool Flag { get; set; }
     }

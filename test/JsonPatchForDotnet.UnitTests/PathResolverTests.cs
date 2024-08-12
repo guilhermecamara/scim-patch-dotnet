@@ -1,3 +1,5 @@
+using FluentAssertions;
+
 namespace JsonPatchForDotnet.UnitTests;
 
 [TestClass]
@@ -10,11 +12,53 @@ public class PathResolverTests
         var root = Root.MockRoot();
         
         // Act
-        var objects = PathResolver.GetProperties(root, ["Items"]);
+        var objects = root.GetProperties(["Items"]);
         
         // Assert
         Assert.AreEqual(1, objects.Count());
         Assert.AreSame(objects.ElementAt(0), root.Items);
+    }
+    
+    [TestMethod]
+    public void GetPropertiesWithFilter_PathIsArray_ShouldReturnItem1Property()
+    {
+        // Arrange
+        var root = Root.MockRoot();
+        
+        // Act
+        var objects = root.GetProperties(["Items[Name eq \"Item1\" and Id eq 1]"]);
+        
+        // Assert
+        Assert.AreEqual(1, objects.Count());
+        objects.ElementAt(0).Should().BeEquivalentTo(root.Items.Where(i => i.Name == "Item1"));
+    }
+    
+    [TestMethod]
+    public void GetPropertiesWithFilterAnd_PathIsArray_ShouldReturnItemsProperty()
+    {
+        // Arrange
+        var root = Root.MockRoot();
+        
+        // Act
+        var objects = root.GetProperties(["Items[Name eq \"Item1\" and Id eq 1]"]);
+        
+        // Assert
+        Assert.AreEqual(1, objects.Count());
+        objects.ElementAt(0).Should().BeEquivalentTo(root.Items.Where(i => i.Name == "Item1"));
+    }
+    
+    [TestMethod]
+    public void GetPropertiesWithFilterOr_PathIsArray_ShouldReturnItemsProperty()
+    {
+        // Arrange
+        var root = Root.MockRoot();
+        
+        // Act
+        var objects = root.GetProperties(["Items[Name eq \"Item1\" or Id eq 2]"]);
+        
+        // Assert
+        Assert.AreEqual(1, objects.Count());
+        objects.ElementAt(0).Should().BeEquivalentTo(root.Items.Where(i => i.Name == "Item1" || i.Id == 2));
     }
     
     [TestMethod]
@@ -24,7 +68,7 @@ public class PathResolverTests
         var root = Root.MockRoot();
         
         // Act
-        var objects = PathResolver.GetProperties(root, ["Items", "Name"]);
+        var objects = root.GetProperties(["Items", "Name"]);
         
         // Assert
         Assert.AreEqual(2, objects.Count());
@@ -39,7 +83,7 @@ public class PathResolverTests
         var root = Root.MockRoot();
         
         // Act
-        var objects = PathResolver.GetProperties(root, ["Items", "SubItems", "Name"]);
+        var objects = root.GetProperties(["Items", "SubItems", "Name"]);
         
         // Assert
         Assert.AreEqual(4, objects.Count());
@@ -56,7 +100,7 @@ public class PathResolverTests
         var root = Root.MockRoot();
         
         // Act
-        var objects = PathResolver.GetProperties(root, ["Items", "SubItems"]);
+        var objects = root.GetProperties(["Items", "SubItems"]);
         
         // Assert
         Assert.AreEqual(2, objects.Count());
@@ -71,7 +115,7 @@ public class PathResolverTests
         var root = Root.MockRoot();
 
         // Act
-        var objects = PathResolver.GetProperties(root, "Items");
+        var objects = root.GetProperties("Items");
         
         // Assert
         Assert.AreEqual(1, objects.Count());
@@ -85,7 +129,7 @@ public class PathResolverTests
         var root = Root.MockRoot();
 
         // Act
-        var objects = PathResolver.GetProperties(root.Items, "Name");
+        var objects = root.Items.GetProperties("Name");
         
         // Assert
         Assert.AreEqual(2, objects.Count());
