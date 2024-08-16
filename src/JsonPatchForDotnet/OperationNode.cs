@@ -1,8 +1,10 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using JsonPatchForDotnet.Extensions;
 
 namespace JsonPatchForDotnet
 {
@@ -154,8 +156,13 @@ namespace JsonPatchForDotnet
             var objects = (paths.Length > 0)
                 ? instance.GetProperties(paths)
                 : new object[] { instance };
+
+            object sourceObject = objects.Single();
+
+            if (sourceObject.GetType().IsNonStringEnumerable())
+                sourceObject = ((IEnumerable<object>)sourceObject).First<object>();
             
-            return (objects.Single(), lastPath);
+            return (sourceObject, lastPath);
         }
     }
 }

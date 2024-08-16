@@ -132,6 +132,22 @@ public class OperationNodeTests
     }
 
     [TestMethod]
+    public void GetSourceObjectWithFilter_ShouldReturnCorrectObjectAndPath()
+    {
+        // Arrange
+        var root = Root.MockRoot();
+
+        // Act
+        var (sourceObject, lastPath) = OperationNode
+            .GetSourceObject("Items[Name eq \"Item1\"].SubItems[not(Id eq 1)].Name", root);
+
+        // Assert
+        root.Items[0].SubItems.First(si => si.Id != 1).Should().BeEquivalentTo(sourceObject);
+
+        Assert.AreEqual("Name", lastPath);
+    }
+    
+    [TestMethod]
     public void GetSourceObject_ShouldThrowException()
     {
         // Arrange
