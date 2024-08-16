@@ -100,6 +100,23 @@ public class OperationNodeTests
     }
     
     [TestMethod]
+    public void GetTargetObjectsWithFilter_ShouldReturnCorrectObjectsAndPath()
+    {
+        // Arrange
+        var root = Root.MockRoot();
+        
+        // Act
+        var (objects, lastPath) = OperationNode
+            .GetTargetObjects("Items[Name eq \"Item1\"].SubItems[not(Id eq 1)].Name", root);
+
+        // Assert
+        Assert.AreEqual(1, objects.Count());
+        root.Items[0].SubItems.Where(si => si.Id != 1).Should().BeEquivalentTo((IEnumerable<object>)objects[0]);
+
+        Assert.AreEqual(lastPath, "Name");
+    }
+    
+    [TestMethod]
     public void GetSourceObject_ShouldReturnCorrectObjectAndPath()
     {
         // Arrange
