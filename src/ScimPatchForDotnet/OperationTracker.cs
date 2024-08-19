@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace JsonPatchForDotnet
+namespace ScimPatchForDotnet
 {
     public static class OperationTracker
     {

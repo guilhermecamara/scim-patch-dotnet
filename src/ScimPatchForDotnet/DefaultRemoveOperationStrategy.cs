@@ -1,10 +1,8 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using JsonPatchForDotnet.Extensions;
+using ScimPatchForDotnet.Extensions;
 
-namespace JsonPatchForDotnet
+namespace ScimPatchForDotnet
 {
     /// <summary>
     /// Add operation as defined at <see cref="https://datatracker.ietf.org/doc/html/rfc7644#section-3.5.2.2"/>

@@ -1,4 +1,4 @@
-namespace JsonPatchForDotnet
+namespace ScimPatchForDotnet
 {
     public enum OperationType
     {

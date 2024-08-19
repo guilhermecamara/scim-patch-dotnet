@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonPatchForDotnet", "src\JsonPatchForDotnet\JsonPatchForDotnet.csproj", "{ED75E277-F1BE-4EE5-A498-64F91DDE8788}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScimPatchForDotnet", "src\ScimPatchForDotnet\ScimPatchForDotnet.csproj", "{ED75E277-F1BE-4EE5-A498-64F91DDE8788}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Antlr", "src\Antlr\Antlr.csproj", "{ECC08296-E8E6-49B8-9FB2-709653B83D8F}"
 EndProject
@@ -8,7 +8,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{AC73B477-047
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{DA43ADA1-BBBB-4002-9765-DBD75A2F2186}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonPatchForDotnet.UnitTests", "test\JsonPatchForDotnet.UnitTests\JsonPatchForDotnet.UnitTests.csproj", "{834420AA-1908-4780-AA35-379D3A38DC0C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScimPatchForDotnet.UnitTests", "test\ScimPatchForDotnet.UnitTests\ScimPatchForDotnet.UnitTests.csproj", "{834420AA-1908-4780-AA35-379D3A38DC0C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Antlr.UnitTests", "test\Antlr.UnitTests\Antlr.UnitTests.csproj", "{41BCA349-B466-4633-B1C6-92F33F22C847}"
 EndProject

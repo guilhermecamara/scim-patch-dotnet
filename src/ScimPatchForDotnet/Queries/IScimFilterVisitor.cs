@@ -1,7 +1,7 @@
-namespace JsonPatchForDotnet.Queries
-{
-    using Antlr4.Runtime.Tree;
+using Antlr4.Runtime.Tree;
 
+namespace ScimPatchForDotnet.Queries
+{
     public interface IScimFilterVisitor<Return>
     {
         Return VisitExpression(IParseTree tree);

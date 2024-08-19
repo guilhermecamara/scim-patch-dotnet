@@ -1,10 +1,10 @@
-namespace JsonPatchForDotnet.Extensions
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
+namespace ScimPatchForDotnet.Extensions
+{
     public static class TypeExtensions
     {
         public static bool IsNonStringEnumerable(this Type? type)

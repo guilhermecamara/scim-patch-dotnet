@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace JsonPatchForDotnet
+namespace ScimPatchForDotnet
 {
     public interface IOperationStrategy
     {

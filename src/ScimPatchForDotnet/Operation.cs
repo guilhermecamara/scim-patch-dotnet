@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 
-namespace JsonPatchForDotnet
+namespace ScimPatchForDotnet
 {
     public partial class Operation
     {

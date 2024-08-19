@@ -1,4 +1,4 @@
-namespace JsonPatchForDotnet.UnitTests;
+namespace ScimPatchForDotnet.UnitTests;
 
 public class SubItem
 {

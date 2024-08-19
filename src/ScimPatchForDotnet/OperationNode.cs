@@ -1,12 +1,11 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using JsonPatchForDotnet.Extensions;
+using ScimPatchForDotnet.Extensions;
 
-namespace JsonPatchForDotnet
+namespace ScimPatchForDotnet
 {
     public class OperationNode : IOperationNode
     {

@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
 
-namespace JsonPatchForDotnet
+namespace ScimPatchForDotnet
 {
     public interface IOperationNode
     {

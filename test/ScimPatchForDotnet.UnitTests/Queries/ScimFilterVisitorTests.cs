@@ -1,8 +1,8 @@
 using Antlr4.Runtime;
-using JsonPatchForDotnet.Queries;
 using ScimPatch.Antlr;
+using ScimPatchForDotnet.Queries;
 
-namespace JsonPatchForDotnet.UnitTests.Queries;
+namespace ScimPatchForDotnet.UnitTests.Queries;
 
 [TestClass]
 public class ScimFilterVisitorTests

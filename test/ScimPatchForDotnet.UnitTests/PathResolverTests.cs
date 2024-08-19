@@ -1,6 +1,6 @@
 using FluentAssertions;
 
-namespace JsonPatchForDotnet.UnitTests;
+namespace ScimPatchForDotnet.UnitTests;
 
 [TestClass]
 public class PathResolverTests

@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Antlr4.Runtime;
-using JsonPatchForDotnet.Extensions;
-using JsonPatchForDotnet.Queries;
 using ScimPatch.Antlr;
+using ScimPatchForDotnet.Extensions;
+using ScimPatchForDotnet.Queries;
 
-namespace JsonPatchForDotnet
+namespace ScimPatchForDotnet
 {
     public static class PathResolver
     {

@@ -1,9 +1,9 @@
-﻿namespace JsonPatchForDotnet.Queries
-{
-    using System;
-    using System.Collections;
-    using Extensions;
+﻿using System;
+using System.Collections;
+using ScimPatchForDotnet.Extensions;
 
+namespace ScimPatchForDotnet.Queries
+{
     public class FilterHelpers
     {
         public static bool StartsWith(string haystack, string needle)

@@ -6,12 +6,12 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
-using JsonPatchForDotnet.Extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ScimPatch.Antlr;
+using ScimPatchForDotnet.Extensions;
 
-namespace JsonPatchForDotnet.Queries
+namespace ScimPatchForDotnet.Queries
 {
     public class ScimFilterVisitor<TResource> : ScimFilterBaseVisitor<LambdaExpression>, IScimFilterVisitor<LambdaExpression>
     {

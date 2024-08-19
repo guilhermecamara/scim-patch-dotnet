@@ -2,7 +2,7 @@ using FluentAssertions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace JsonPatchForDotnet.UnitTests;
+namespace ScimPatchForDotnet.UnitTests;
 
 [TestClass]
 public class OperationNodeTests
