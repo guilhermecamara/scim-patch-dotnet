@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <Nullable>enable</Nullable>
+        <IsPackable>true</IsPackable>
+        <PackageId>ScimPatch</PackageId>
+        <Title>SCIM Patch for .Net</Title>
+        <Authors>Guilherme Câmara</Authors>
+        <Description>
+            From an patch json object as defined in RFC 7644, applies the operations into an object instance.
+        </Description>
+        <Copyright>Copyright 2024 Guilherme Câmara</Copyright>
+        <PackageTags>Scim;ScimV2;Patch;ScimV2Patch;ScimPatch;JsonPatch;RFC 7644;</PackageTags>
+        <RepositoryUrl>https://github.com/guilhermecamara/scim-patch-dotnet</RepositoryUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ScimPatch.Antlr\ScimPatch.Antlr.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\..\README.md" Pack="true" PackagePath="">
+        <Link>README.md</Link>
+      </Content>
+    </ItemGroup>
+
+    <Target Name="PostPackNugetDeploy" AfterTargets="Pack" Condition="'$(Configuration)' == 'Debug' And '$(OS)' == 'Windows_NT'">
+        <Exec Command="nuget add &quot;$(OutputPath)$(PackageId).$(PackageVersion).nupkg&quot; -source C:\local-nuget-feed" />
+    </Target>
+    <Target Name="PostPackNugetDeploy" AfterTargets="Pack" Condition="'$(Configuration)' == 'Debug' And '$(OS)' == 'Unix'">
+        <Exec Command="dotnet nuget push &quot;$(OutputPath)$(PackageId).$(PackageVersion).nupkg&quot; --source ~/.aspnet/local-nuget-feed" />
+    </Target>
+    
+</Project>
