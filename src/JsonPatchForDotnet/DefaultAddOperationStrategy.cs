@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace JsonPatchForDotnet
 {
+    /// <summary>
+    /// Add operation as defined at <see cref="https://datatracker.ietf.org/doc/html/rfc7644#section-3.5.2.1"/>
+    /// </summary>
     public class DefaultAddOperationStrategy : IOperationStrategy
     {
         public Task ApplyAsync(IOperationNode operationNode)

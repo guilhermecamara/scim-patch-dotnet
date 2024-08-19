@@ -1,51 +1,29 @@
 namespace JsonPatchForDotnet.UnitTests;
 
 [TestClass]
-public class DefaultAddOperationStrategyTests
+public class DefaultRemoveOperationStrategyTests
 {
     #region Default Target
     
     [TestMethod]
-    public async Task ApplyAsync_ShouldSetValue()
+    public async Task ApplyAsync_ShouldRemoveValue()
     {
         // Arrange
-        var testInstance = new TestClass() { Value = 100 };
+        var testInstance = new TestClass { Value = 42 };
         var targetProperty = typeof(TestClass).GetProperty(nameof(TestClass.Value))!;
         var operationNode = new OperationNode(
-            operationStrategy: new DefaultAddOperationStrategy(),
+            operationStrategy: new DefaultRemoveOperationStrategy(),
             instance: testInstance,
             targetPropertyInfo: targetProperty,
             sourcePropertyInfo: null,
-            value: 42
-        );
-
-        // Act
-        var result = await operationNode.TryApplyAsync();
-
-        // Assert
-        Assert.IsTrue(result);
-        Assert.AreEqual(42, testInstance.Value);
-    }
-    
-    [TestMethod]
-    public async Task ApplyAsync_ShouldNotSetValue()
-    {
-        // Arrange
-        var testInstance = new TestClass();
-        var targetProperty = typeof(TestClass).GetProperty(nameof(TestClass.Value))!;
-        var operationNode = new OperationNode(
-            operationStrategy: new DefaultAddOperationStrategy(),
-            instance: testInstance,
-            targetPropertyInfo: targetProperty,
-            sourcePropertyInfo: null,
-            value: "42"
+            value: null
         );
 
         // Act
         var applyResult = await operationNode.TryApplyAsync();
 
         // Assert
-        Assert.IsFalse(applyResult);
+        Assert.IsTrue(applyResult);
         Assert.AreEqual(0, testInstance.Value);
     }
 
@@ -56,15 +34,15 @@ public class DefaultAddOperationStrategyTests
         var testInstance = new TestClass { Value = 42 };
         var targetProperty = typeof(TestClass).GetProperty(nameof(TestClass.Value))!;
         var operationNode = new OperationNode(
-            operationStrategy: new DefaultAddOperationStrategy(),
+            operationStrategy: new DefaultRemoveOperationStrategy(),
             instance: testInstance,
             targetPropertyInfo: targetProperty,
             sourcePropertyInfo: null,
-            value: 100
+            value: null
         );
 
         // Act
-        var applyResult = await operationNode.TryApplyAsync(); // Apply new value
+        var applyResult = await operationNode.TryApplyAsync(); // Apply remove
         var revertResult = await operationNode.TryRevertAsync(); // Revert to previous value
 
         // Assert
@@ -83,17 +61,17 @@ public class DefaultAddOperationStrategyTests
     #region IList? Target
 
     [TestMethod]
-    public async Task ApplyAsync_ShouldAddValueToNullNullableList()
+    public async Task ApplyAsync_ShouldRemoveValueFromNullableList()
     {
         // Arrange
-        var testInstance = new TestClassWithNullableList { Items = null };
+        var testInstance = new TestClassWithNullableList { Items = new List<int> { 1, 2, 2, 3 } };
         var targetProperty = typeof(TestClassWithNullableList).GetProperty(nameof(TestClassWithNullableList.Items))!;
         var operationNode = new OperationNode(
-            operationStrategy: new DefaultAddOperationStrategy(),
+            operationStrategy: new DefaultRemoveOperationStrategy(),
             instance: testInstance,
             targetPropertyInfo: targetProperty,
             sourcePropertyInfo: null,
-            value: 42
+            value: 2
         );
 
         // Act
@@ -101,70 +79,24 @@ public class DefaultAddOperationStrategyTests
 
         // Assert
         Assert.IsTrue(applyResult);
-        Assert.IsNotNull(testInstance.Items);
-        Assert.AreEqual(1, testInstance.Items.Count);
-        Assert.AreEqual(42, testInstance.Items[0]);
-    }
-
-    [TestMethod]
-    public async Task ApplyAsync_ShouldAddValueToEmptyNullableList()
-    {
-        // Arrange
-        var testInstance = new TestClassWithNullableList { Items = new List<int>() };
-        var targetProperty = typeof(TestClassWithNullableList).GetProperty(nameof(TestClassWithNullableList.Items))!;
-        var operationNode = new OperationNode(
-            operationStrategy: new DefaultAddOperationStrategy(),
-            instance: testInstance,
-            targetPropertyInfo: targetProperty,
-            sourcePropertyInfo: null,
-            value: 42
-        );
-
-        // Act
-        var applyResult = await operationNode.TryApplyAsync();
-
-        // Assert
-        Assert.IsTrue(applyResult);
-        Assert.AreEqual(1, testInstance.Items.Count);
-        Assert.AreEqual(42, testInstance.Items[0]);
-    }
-
-    [TestMethod]
-    public async Task ApplyAsync_ShouldAddValueToNullableListWithOneElement()
-    {
-        // Arrange
-        var testInstance = new TestClassWithNullableList { Items = new List<int> { 1 } };
-        var targetProperty = typeof(TestClassWithNullableList).GetProperty(nameof(TestClassWithNullableList.Items))!;
-        var operationNode = new OperationNode(
-            operationStrategy: new DefaultAddOperationStrategy(),
-            instance: testInstance,
-            targetPropertyInfo: targetProperty,
-            sourcePropertyInfo: null,
-            value: 42
-        );
-
-        // Act
-        var applyResult = await operationNode.TryApplyAsync();
-
-        // Assert
-        Assert.IsTrue(applyResult);
-        Assert.AreEqual(2, testInstance.Items.Count);
+        Assert.AreEqual(3, testInstance.Items.Count);
         Assert.AreEqual(1, testInstance.Items[0]);
-        Assert.AreEqual(42, testInstance.Items[1]);
+        Assert.AreEqual(2, testInstance.Items[1]);
+        Assert.AreEqual(3, testInstance.Items[2]);
     }
 
     [TestMethod]
-    public async Task RevertAsync_ShouldRemoveLastValueFromNullableListWithOneElement()
+    public async Task RevertAsync_ShouldRemoveValueFromNullableList()
     {
         // Arrange
-        var testInstance = new TestClassWithNullableList { Items = new List<int> { 1 } };
+        var testInstance = new TestClassWithNullableList { Items = new List<int> { 1, 2, 2, 3 } };
         var targetProperty = typeof(TestClassWithNullableList).GetProperty(nameof(TestClassWithNullableList.Items))!;
         var operationNode = new OperationNode(
-            operationStrategy: new DefaultAddOperationStrategy(),
+            operationStrategy: new DefaultRemoveOperationStrategy(),
             instance: testInstance,
             targetPropertyInfo: targetProperty,
             sourcePropertyInfo: null,
-            value: 42
+            value: 2
         );
 
         // Act
@@ -174,18 +106,91 @@ public class DefaultAddOperationStrategyTests
         // Assert
         Assert.IsTrue(applyResult);
         Assert.IsTrue(revertResult);
-        Assert.AreEqual(1, testInstance.Items.Count);
+        Assert.AreEqual(4, testInstance.Items.Count);
         Assert.AreEqual(1, testInstance.Items[0]);
+        Assert.AreEqual(2, testInstance.Items[1]);
+        Assert.AreEqual(3, testInstance.Items[2]);
+        Assert.AreEqual(2, testInstance.Items[3]);
+
     }
     
     [TestMethod]
-    public async Task RevertAsync_ShouldRemoveLastValueFromNullNullableList()
+    public async Task ApplyAsync_ShouldSetNullToNullableList()
     {
         // Arrange
-        var testInstance = new TestClassWithNullableList { Items = null };
+        var testInstance = new TestClassWithNullableList { Items = new List<int> { 1, 2, 2, 3 }};
         var targetProperty = typeof(TestClassWithNullableList).GetProperty(nameof(TestClassWithNullableList.Items))!;
         var operationNode = new OperationNode(
-            operationStrategy: new DefaultAddOperationStrategy(),
+            operationStrategy: new DefaultRemoveOperationStrategy(),
+            instance: testInstance,
+            targetPropertyInfo: targetProperty,
+            sourcePropertyInfo: null,
+            value: null
+        );
+
+        // Act
+        var applyResult = await operationNode.TryApplyAsync();
+
+        // Assert
+        Assert.IsTrue(applyResult);
+        Assert.IsNull(testInstance.Items);
+    }
+    
+    [TestMethod]
+    public async Task RevertAsync_ShouldSetNullToNullableList()
+    {
+        // Arrange
+        var list = new List<int> { 1, 2, 2, 3 };
+        var testInstance = new TestClassWithNullableList { Items = list };
+        var targetProperty = typeof(TestClassWithNullableList).GetProperty(nameof(TestClassWithNullableList.Items))!;
+        var operationNode = new OperationNode(
+            operationStrategy: new DefaultRemoveOperationStrategy(),
+            instance: testInstance,
+            targetPropertyInfo: targetProperty,
+            sourcePropertyInfo: null,
+            value: null
+        );
+
+        // Act
+        var applyResult = await operationNode.TryApplyAsync(); // Apply new value
+        var revertResult = await operationNode.TryRevertAsync(); // Revert to previous value
+
+        // Assert
+        Assert.IsTrue(applyResult);
+        Assert.IsTrue(revertResult);
+        Assert.AreSame(list, testInstance.Items);
+    }
+
+    [TestMethod]
+    public async Task ApplyAsync_ShouldRemoveValueFromNullableListWithOneElement()
+    {
+        // Arrange
+        var testInstance = new TestClassWithNullableList { Items = new List<int> { 1 } };
+        var targetProperty = typeof(TestClassWithNullableList).GetProperty(nameof(TestClassWithNullableList.Items))!;
+        var operationNode = new OperationNode(
+            operationStrategy: new DefaultRemoveOperationStrategy(),
+            instance: testInstance,
+            targetPropertyInfo: targetProperty,
+            sourcePropertyInfo: null,
+            value: 1
+        );
+
+        // Act
+        var applyResult = await operationNode.TryApplyAsync();
+
+        // Assert
+        Assert.IsTrue(applyResult);
+        Assert.AreEqual(0, testInstance.Items.Count);
+    }
+
+    [TestMethod]
+    public async Task RevertAsync_ShouldRemoveLastValueFromNullableListWithOneElement()
+    {
+        // Arrange
+        var testInstance = new TestClassWithNullableList { Items = new List<int> { 1 } };
+        var targetProperty = typeof(TestClassWithNullableList).GetProperty(nameof(TestClassWithNullableList.Items))!;
+        var operationNode = new OperationNode(
+            operationStrategy: new DefaultRemoveOperationStrategy(),
             instance: testInstance,
             targetPropertyInfo: targetProperty,
             sourcePropertyInfo: null,
@@ -199,7 +204,8 @@ public class DefaultAddOperationStrategyTests
         // Assert
         Assert.IsTrue(applyResult);
         Assert.IsTrue(revertResult);
-        Assert.IsNull(testInstance.Items);
+        Assert.AreEqual(1, testInstance.Items.Count);
+        Assert.AreEqual(1, testInstance.Items[0]);
     }
 
     class TestClassWithNullableList
@@ -209,20 +215,20 @@ public class DefaultAddOperationStrategyTests
 
     #endregion
     
-    #region IList? Target
+    #region IList Target
 
     [TestMethod]
-    public async Task ApplyAsync_ShouldAddValueToNullList()
+    public async Task ApplyAsync_ShouldRemoveValueFromList()
     {
         // Arrange
-        var testInstance = new TestClassWithList { Items = null };
+        var testInstance = new TestClassWithList { Items = new List<int> { 1, 2, 2, 3 } };
         var targetProperty = typeof(TestClassWithList).GetProperty(nameof(TestClassWithList.Items))!;
         var operationNode = new OperationNode(
-            operationStrategy: new DefaultAddOperationStrategy(),
+            operationStrategy: new DefaultRemoveOperationStrategy(),
             instance: testInstance,
             targetPropertyInfo: targetProperty,
             sourcePropertyInfo: null,
-            value: 42
+            value: 2
         );
 
         // Act
@@ -230,70 +236,75 @@ public class DefaultAddOperationStrategyTests
 
         // Assert
         Assert.IsTrue(applyResult);
-        Assert.IsNotNull(testInstance.Items);
-        Assert.AreEqual(1, testInstance.Items.Count);
-        Assert.AreEqual(42, testInstance.Items[0]);
-    }
-
-    [TestMethod]
-    public async Task ApplyAsync_ShouldAddValueToEmptyList()
-    {
-        // Arrange
-        var testInstance = new TestClassWithList { Items = new List<int>() };
-        var targetProperty = typeof(TestClassWithList).GetProperty(nameof(TestClassWithList.Items))!;
-        var operationNode = new OperationNode(
-            operationStrategy: new DefaultAddOperationStrategy(),
-            instance: testInstance,
-            targetPropertyInfo: targetProperty,
-            sourcePropertyInfo: null,
-            value: 42
-        );
-
-        // Act
-        var applyResult = await operationNode.TryApplyAsync();
-
-        // Assert
-        Assert.IsTrue(applyResult);
-        Assert.AreEqual(1, testInstance.Items.Count);
-        Assert.AreEqual(42, testInstance.Items[0]);
-    }
-
-    [TestMethod]
-    public async Task ApplyAsync_ShouldAddValueToListWithOneElement()
-    {
-        // Arrange
-        var testInstance = new TestClassWithList { Items = new List<int> { 1 } };
-        var targetProperty = typeof(TestClassWithList).GetProperty(nameof(TestClassWithList.Items))!;
-        var operationNode = new OperationNode(
-            operationStrategy: new DefaultAddOperationStrategy(),
-            instance: testInstance,
-            targetPropertyInfo: targetProperty,
-            sourcePropertyInfo: null,
-            value: 42
-        );
-
-        // Act
-        var applyResult = await operationNode.TryApplyAsync();
-
-        // Assert
-        Assert.IsTrue(applyResult);
-        Assert.AreEqual(2, testInstance.Items.Count);
+        Assert.AreEqual(3, testInstance.Items.Count);
         Assert.AreEqual(1, testInstance.Items[0]);
-        Assert.AreEqual(42, testInstance.Items[1]);
+        Assert.AreEqual(2, testInstance.Items[1]);
+        Assert.AreEqual(3, testInstance.Items[2]);
     }
 
     [TestMethod]
-    public async Task RevertAsync_ShouldRemoveLastValueFromListWithOneElement()
+    public async Task RevertAsync_ShouldRemoveValueFromList()
     {
         // Arrange
-        var testInstance = new TestClassWithList { Items = new List<int> { 1 } };
+        var testInstance = new TestClassWithList { Items = new List<int> { 1, 2, 2, 3 } };
         var targetProperty = typeof(TestClassWithList).GetProperty(nameof(TestClassWithList.Items))!;
         var operationNode = new OperationNode(
-            operationStrategy: new DefaultAddOperationStrategy(),
+            operationStrategy: new DefaultRemoveOperationStrategy(),
             instance: testInstance,
             targetPropertyInfo: targetProperty,
             sourcePropertyInfo: null,
-            value: 42
+            value: 2
+        );
+
+        // Act
+        var applyResult = await operationNode.TryApplyAsync(); // Apply new value
+        var revertResult = await operationNode.TryRevertAsync(); // Revert to previous value
+
+        // Assert
+        Assert.IsTrue(applyResult);
+        Assert.IsTrue(revertResult);
+        Assert.AreEqual(4, testInstance.Items.Count);
+        Assert.AreEqual(1, testInstance.Items[0]);
+        Assert.AreEqual(2, testInstance.Items[1]);
+        Assert.AreEqual(3, testInstance.Items[2]);
+        Assert.AreEqual(2, testInstance.Items[3]);
+
+    }
+    
+    [TestMethod]
+    public async Task ApplyAsync_ShouldRemoveValueToListWithOneElement()
+    {
+        // Arrange
+        var testInstance = new TestClassWithNullableList { Items = new List<int> { 1 } };
+        var targetProperty = typeof(TestClassWithNullableList).GetProperty(nameof(TestClassWithNullableList.Items))!;
+        var operationNode = new OperationNode(
+            operationStrategy: new DefaultRemoveOperationStrategy(),
+            instance: testInstance,
+            targetPropertyInfo: targetProperty,
+            sourcePropertyInfo: null,
+            value: 1
+        );
+
+        // Act
+        var applyResult = await operationNode.TryApplyAsync();
+
+        // Assert
+        Assert.IsTrue(applyResult);
+        Assert.AreEqual(0, testInstance.Items.Count);
+    }
+
+    [TestMethod]
+    public async Task RevertAsync_ShouldRemoveValueToListWithOneElement()
+    {
+        // Arrange
+        var testInstance = new TestClassWithNullableList { Items = new List<int> { 1 } };
+        var targetProperty = typeof(TestClassWithNullableList).GetProperty(nameof(TestClassWithNullableList.Items))!;
+        var operationNode = new OperationNode(
+            operationStrategy: new DefaultRemoveOperationStrategy(),
+            instance: testInstance,
+            targetPropertyInfo: targetProperty,
+            sourcePropertyInfo: null,
+            value: 1
         );
 
         // Act
@@ -309,7 +320,7 @@ public class DefaultAddOperationStrategyTests
 
     class TestClassWithList
     {
-        public IList<int>? Items { get; set; }
+        public IList<int> Items { get; set; }
     }
 
     #endregion
