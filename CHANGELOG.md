@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
+<a name="2.0.0"></a>
+## 2.0.0 (2024-08-20)
+
+### Bug Fixes
+
+* fixed remove operation, refactor opration to operationnode code and fixed tests
+* fixed remove operations not working
+
+### Breaking Changes
+
+* fixed remove operations not working
+
 <a name="1.0.0"></a>
 ## 1.0.0 (2024-08-19)
 
