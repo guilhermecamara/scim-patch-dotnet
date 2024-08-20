@@ -30,7 +30,7 @@ public class PathResolverTests
         
         // Assert
         Assert.AreEqual(1, objects.Count());
-        objects.ElementAt(0).Should().BeEquivalentTo(root.Items.Where(i => i.Name == "Item1"));
+        objects.Should().BeEquivalentTo(root.Items.Where(i => i.Name == "Item1"));
     }
     
     [TestMethod]
@@ -44,7 +44,7 @@ public class PathResolverTests
         
         // Assert
         Assert.AreEqual(1, objects.Count());
-        objects.ElementAt(0).Should().BeEquivalentTo(root.Items.Where(i => i.Name == "Item1"));
+        objects.Should().BeEquivalentTo(root.Items.Where(i => i.Name == "Item1"));
     }
     
     [TestMethod]
@@ -57,8 +57,8 @@ public class PathResolverTests
         var objects = root.GetProperties(["Items[Name eq \"Item1\" or Id eq 2]"]);
         
         // Assert
-        Assert.AreEqual(1, objects.Count());
-        objects.ElementAt(0).Should().BeEquivalentTo(root.Items.Where(i => i.Name == "Item1" || i.Id == 2));
+        Assert.AreEqual(2, objects.Count());
+        objects.Should().BeEquivalentTo(root.Items.Where(i => i.Name == "Item1" || i.Id == 2));
     }
     
     [TestMethod]

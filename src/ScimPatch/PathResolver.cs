@@ -61,16 +61,28 @@ namespace ScimPatch
             { 
                 foreach (var item in (IEnumerable<object>)o)
                 {
-                    yield return ApplyFilterIfPossible(item.GetType().GetProperty(root)!.GetValue(item), filter);
+                    foreach (var filteredObject in ApplyFilterIfPossible(item, root, filter))
+                        yield return filteredObject;
                 }
             }
             else
             {
-                yield return ApplyFilterIfPossible(o.GetType().GetProperty(root)!.GetValue(o), filter);
+                foreach (var filteredObject in ApplyFilterIfPossible(o, root, filter))
+                    yield return filteredObject;
             }
         }
 
-        private static object ApplyFilterIfPossible(object o, string? filter)
+        private static IEnumerable<object> ApplyFilterIfPossible(object o, string root, string? filter)
+        {
+            var child = o.GetType().GetProperty(root)!.GetValue(o);
+            if (ApplyFilterIfPossible(child, filter,
+                    out var filteredObjects))
+                foreach (var filteredObject in filteredObjects) yield return filteredObject;
+            else
+                yield return child;
+        }
+
+        private static bool ApplyFilterIfPossible(object o, string? filter, out IEnumerable<object> filteredObjects)
         {
             var type = o.GetType();
 
@@ -86,10 +98,12 @@ namespace ScimPatch
                     .Invoke(visitor, new object[] { filterContext });
                 var compiledResult = expression.Compile();
                 var enumerable = (IEnumerable<object>)o;
-                return enumerable.Where(e => (bool)compiledResult.DynamicInvoke(e));
+                filteredObjects = enumerable.Where(e => (bool)compiledResult.DynamicInvoke(e)).ToList();
+                return true;
             }
 
-            return o;
+            filteredObjects = Array.Empty<object>();
+            return false;
         }
         
         private static ScimFilterParser CreateParser(string filter)
@@ -101,7 +115,7 @@ namespace ScimPatch
             return speakParser;   
         }
 
-        private static (string, string?) GetRootPath(string path)
+        public static (string, string?) GetRootPath(this string path)
         {
             var bracketStart = path.IndexOf('[');
             var bracketEnd = path.IndexOf(']');

@@ -7,6 +7,8 @@ namespace ScimPatch.UnitTests;
 [TestClass]
 public class OperationNodeTests
 {
+    #region Add
+    
     [TestMethod]
     public void FromOperation_ShouldCreateOperationNodes_ForAddOperationOnRootName()
     {
@@ -30,6 +32,8 @@ public class OperationNodeTests
         Assert.IsNotNull(node.OperationStrategy);
         Assert.IsInstanceOfType(node.OperationStrategy, typeof(DefaultAddOperationStrategy));
         node.Value.Should().BeEquivalentTo(name);
+        node.TargetProperty.Should().BeSameAs(root.GetType().GetProperty("Name"));
+        node.Instance.Should().BeSameAs(root);
     }
     
     [TestMethod]
@@ -64,8 +68,90 @@ public class OperationNodeTests
         Assert.IsNotNull(node.OperationStrategy);
         Assert.IsInstanceOfType(node.OperationStrategy, typeof(DefaultAddOperationStrategy));
         node.Value.Should().BeEquivalentTo(item);
+        node.TargetProperty.Should().BeSameAs(root.GetType().GetProperty("Items"));
+        node.Instance.Should().BeSameAs(root);
     }
 
+    #endregion
+    
+    #region Remove
+    
+    [TestMethod]
+    public void FromOperation_ShouldCreateOperationNodes_ForRemoveOperationOnRootName()
+    {
+        // Arrange
+        var root = Root.MockRoot();
+        
+        var operation = new Operation
+        {
+            OperationType = OperationType.Remove,
+            Path = "Name"
+        };
+
+        // Act
+        var operationNodes = OperationNode.FromOperation(operation, root);
+
+        // Assert
+        Assert.AreEqual(1, operationNodes.Count);
+        var node = operationNodes[0];
+        Assert.IsNotNull(node.OperationStrategy);
+        Assert.IsInstanceOfType(node.OperationStrategy, typeof(DefaultRemoveOperationStrategy));
+        node.TargetProperty.Should().BeSameAs(root.GetType().GetProperty("Name"));
+        node.Instance.Should().BeSameAs(root);
+    }
+    
+    [TestMethod]
+    public void FromOperation_ShouldCreateOperationNodes_ForRemoveOperationOnRootItemsItems()
+    {
+        // Arrange
+        var root = Root.MockRoot();
+        
+        var operation = new Operation
+        {
+            OperationType = OperationType.Remove,
+            Path = "Items[Id eq 1]"
+        };
+
+        // Act
+        var operationNodes = OperationNode.FromOperation(operation, root);
+
+        // Assert
+        Assert.AreEqual(1, operationNodes.Count);
+        var node = operationNodes[0];
+        Assert.IsNotNull(node.OperationStrategy);
+        Assert.IsInstanceOfType(node.OperationStrategy, typeof(DefaultRemoveOperationStrategy));
+        node.Value.Should().BeEquivalentTo(root.Items.First(i => i.Id == 1));
+        node.TargetProperty.Should().BeSameAs(root.GetType().GetProperty("Items"));
+        node.Instance.Should().BeSameAs(root);
+    }
+    
+    [TestMethod]
+    public void FromOperation_ShouldCreateOperationNodes_ForRemoveOperationOnRootItems()
+    {
+        // Arrange
+        var root = Root.MockRoot();
+        
+        var operation = new Operation
+        {
+            OperationType = OperationType.Remove,
+            Path = "Items"
+        };
+
+        // Act
+        var operationNodes = OperationNode.FromOperation(operation, root);
+
+        // Assert
+        Assert.AreEqual(1, operationNodes.Count);
+        var node = operationNodes[0];
+        Assert.IsNotNull(node.OperationStrategy);
+        Assert.IsInstanceOfType(node.OperationStrategy, typeof(DefaultRemoveOperationStrategy));
+        node.Value.Should().BeNull();
+        node.TargetProperty.Should().BeSameAs(root.GetType().GetProperty("Items"));
+        node.Instance.Should().BeSameAs(root);
+    }
+    
+    #endregion
+    
     [TestMethod]
     public void FromOperation_ShouldThrowExceptionForInvalidPath()
     {
@@ -111,7 +197,7 @@ public class OperationNodeTests
 
         // Assert
         Assert.AreEqual(1, objects.Count());
-        root.Items[0].SubItems.Where(si => si.Id != 1).Should().BeEquivalentTo((IEnumerable<object>)objects[0]);
+        root.Items[0].SubItems.Where(si => si.Id != 1).Should().BeEquivalentTo(objects);
 
         Assert.AreEqual(lastPath, "Name");
     }

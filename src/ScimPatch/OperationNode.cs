@@ -68,49 +68,16 @@ namespace ScimPatch
 
         public static IList<OperationNode> FromOperation(Operation operation, object instance)
         {
-            var operationNodes = new List<OperationNode>();
-            
-            IOperationStrategy? operationStrategy = null;
-            PropertyInfo? sourcePropertyInfo = null;
-            object? value = null;
-            
-            var (targetObjects, targetPropertyName) = GetTargetObjects(operation.Path, instance);
-            var targetPropertyInfo = instance.GetType().GetProperty(targetPropertyName)
-                                     ?? throw new ArgumentException(targetPropertyName);
-            
-            if (operation.OperationType == OperationType.Move
-                || operation.OperationType == OperationType.Copy)
-            {
-                var (sourceObject, sourcePropertyName) = GetSourceObject(operation.From!, instance);
-                sourcePropertyInfo = sourceObject.GetType().GetProperty(sourcePropertyName);
-            }
-
-            if (operation.OperationType == OperationType.Add
-                || operation.OperationType == OperationType.Replace
-                || operation.OperationType == OperationType.Test)
-            {
-                if (Utils.IsIList(targetPropertyInfo.PropertyType))
-                {
-                    var type = targetPropertyInfo.PropertyType.GetGenericArguments()[0];
-                    value = operation.Value!.ToObject(type);
-                }
-                else
-                {
-                    value = operation.Value!.ToObject(targetPropertyInfo.PropertyType);
-                }
-            }
-            
             switch (operation.OperationType)
             {
                 case OperationType.Add:
-                    operationStrategy = new DefaultAddOperationStrategy();
-                    break; 
+                    return CreateAddOperations(operation, instance); 
                 case OperationType.Copy:
                     break;
                 case OperationType.Move:
                     break;
                 case OperationType.Remove:
-                    break;
+                    return CreateRemoveOperations(operation, instance);
                 case OperationType.Replace:
                     break;
                 case OperationType.Test:
@@ -118,7 +85,42 @@ namespace ScimPatch
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+            throw new NotImplementedException();
+        }
 
+        private static IList<OperationNode> CreateAddOperations(Operation operation, object instance)
+        {
+            // Strategy
+            var operationStrategy = new DefaultAddOperationStrategy();
+            
+            // Source
+            PropertyInfo? sourcePropertyInfo = null;
+            
+            // Target
+            var (targetObjects, lastPath) = GetTargetObjects(operation.Path, instance);
+
+            var (targetPropertyName, filter) = lastPath.GetRootPath();
+
+            if (!string.IsNullOrEmpty(filter))
+                throw new InvalidOperationException("Last path cannot have filter for add operations");
+            
+            var targetPropertyInfo = instance.GetType().GetProperty(targetPropertyName)
+                                     ?? throw new ArgumentException(targetPropertyName);
+            
+            // Value
+            object? value = null;
+            if (Utils.IsIList(targetPropertyInfo.PropertyType))
+            {
+                var type = targetPropertyInfo.PropertyType.GetGenericArguments()[0];
+                value = operation.Value!.ToObject(type);
+            }
+            else
+            {
+                value = operation.Value!.ToObject(targetPropertyInfo.PropertyType);
+            }
+            
+            // Nodes
+            var operationNodes = new List<OperationNode>();
             foreach (var targetObject in targetObjects)
             {
                 operationNodes.Add(new OperationNode(
@@ -130,6 +132,70 @@ namespace ScimPatch
                 ));
             }
 
+            return operationNodes;
+        }
+
+        private static IList<OperationNode> CreateRemoveOperations(Operation operation, object instance)
+        {
+            // Strategy
+            var operationStrategy = new DefaultRemoveOperationStrategy();
+            
+            // Source
+            PropertyInfo? sourcePropertyInfo = null;
+            
+            // Target
+            var (targetObjects, lastPath) = GetTargetObjects(operation.Path, instance);
+
+            var (targetPropertyName, filter) = lastPath.GetRootPath();
+            
+            var targetPropertyInfo = instance.GetType().GetProperty(targetPropertyName)
+                                     ?? throw new ArgumentException(targetPropertyName);
+            
+            // Value
+            
+            // This is always null for remove except on list with filter on last path
+            object? value = null;
+            
+            // Nodes
+            var operationNodes = new List<OperationNode>();
+            if (!string.IsNullOrEmpty(filter))
+            {
+                foreach (var targetObject in targetObjects)
+                {
+                    var filteredTargetObjects = targetObject.GetProperties(new string[] { lastPath });
+
+                    // When the target is a list, and there is a filter in last path
+                    // the value will be the filtered objects
+                    // so that list.Remove(o) removes the filtered objects
+                    if (Utils.IsIList(targetPropertyInfo.PropertyType))
+                    {
+                        foreach (var filteredTargetObject in filteredTargetObjects)
+                        {
+                            operationNodes.Add(new OperationNode(
+                                operationStrategy!,
+                                targetObject,
+                                targetPropertyInfo!,
+                                sourcePropertyInfo,
+                                filteredTargetObject
+                            ));
+                        }
+                    }
+                }
+            }
+            else
+            {
+                foreach (var targetObject in targetObjects)
+                {
+                    operationNodes.Add(new OperationNode(
+                        operationStrategy!,
+                        targetObject,
+                        targetPropertyInfo!,
+                        sourcePropertyInfo,
+                        value
+                    ));
+                }
+            }
+            
             return operationNodes;
         }
 
