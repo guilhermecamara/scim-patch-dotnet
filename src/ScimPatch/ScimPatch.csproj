@@ -13,7 +13,7 @@
         <Copyright>Copyright 2024 Guilherme Câmara</Copyright>
         <PackageTags>Scim;ScimV2;Patch;ScimV2Patch;ScimPatch;JsonPatch;RFC 7644;</PackageTags>
         <RepositoryUrl>https://github.com/guilhermecamara/scim-patch-dotnet</RepositoryUrl>
-        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
