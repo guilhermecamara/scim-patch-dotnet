@@ -1,0 +1,34 @@
+[
+  {
+    "op": "add",
+    "path": "NullableLongProperty",
+    "value": 1234567890
+  },
+  {
+    "op": "remove",
+    "path": "StringList[this eq \"Item3\"]"
+  },
+  {
+    "op": "add",
+    "path": "NestedObject.Title",
+    "value": "New Nested Name"
+  },
+  {
+    "op": "add",
+    "path": "DateProperty",
+    "value": "2024-08-21T00:00:00Z"
+  },
+  {
+    "op": "remove",
+    "path": "NullableBoolProperty"
+  },
+  {
+    "op": "add",
+    "path": "NestedList[not(Title eq \"Deep Nested 1\")].Title",
+    "value": "Added Title"
+  },
+  {
+    "op": "remove",
+    "path": "IntProperty"
+  }
+]

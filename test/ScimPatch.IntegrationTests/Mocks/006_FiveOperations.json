@@ -1,0 +1,25 @@
+[
+  {
+    "op": "add",
+    "path": "NullableIntProperty",
+    "value": 42
+  },
+  {
+    "op": "remove",
+    "path": "BoolProperty"
+  },
+  {
+    "op": "add",
+    "path": "NestedObject.NestedList[NestedInt eq 10].NestedInt",
+    "value": 7
+  },
+  {
+    "op": "add",
+    "path": "StringList",
+    "value": "Added Value"
+  },
+  {
+    "op": "remove",
+    "path": "NestedList[Title eq \"Deep Nested 1\"].Title"
+  }
+]

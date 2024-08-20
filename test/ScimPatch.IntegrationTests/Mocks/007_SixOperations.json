@@ -1,0 +1,30 @@
+[
+  {
+    "op": "add",
+    "path": "StringProperty",
+    "value": "Updated String"
+  },
+  {
+    "op": "remove",
+    "path": "NullableDateProperty"
+  },
+  {
+    "op": "add",
+    "path": "NestedObject.NestedList",
+    "value": { "Name": "Nested Item 3" }
+  },
+  {
+    "op": "add",
+    "path": "NestedList[Title eq \"Deep Nested 2\"].NestedDate",
+    "value": "2024-08-20T12:00:00Z"
+  },
+  {
+    "op": "remove",
+    "path": "LongProperty"
+  },
+  {
+    "op": "add",
+    "path": "BoolProperty",
+    "value": true
+  }
+]

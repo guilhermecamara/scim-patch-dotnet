@@ -1,0 +1,11 @@
+[
+  {
+    "op": "add",
+    "path": "IntProperty",
+    "value": 123
+  },
+  {
+    "op": "remove",
+    "path": "NullableBoolProperty"
+  }
+]

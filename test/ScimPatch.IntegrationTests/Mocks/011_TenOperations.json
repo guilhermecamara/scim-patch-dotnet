@@ -1,0 +1,48 @@
+[
+  {
+    "op": "add",
+    "path": "LongProperty",
+    "value": 88888888
+  },
+  {
+    "op": "remove",
+    "path": "NullableIntList"
+  },
+  {
+    "op": "add",
+    "path": "StringProperty",
+    "value": "Updated String Again"
+  },
+  {
+    "op": "remove",
+    "path": "BoolProperty"
+  },
+  {
+    "op": "add",
+    "path": "NestedObject.NestedList[NestedInt lt 11].NestedInt",
+    "value": 21
+  },
+  {
+    "op": "add",
+    "path": "StringList",
+    "value": "Another String"
+  },
+  {
+    "op": "remove",
+    "path": "NullableDateProperty"
+  },
+  {
+    "op": "add",
+    "path": "DateProperty",
+    "value": "2024-08-24T00:00:00Z"
+  },
+  {
+    "op": "remove",
+    "path": "NestedList[Title eq \"Deep Nested 1\"].Title"
+  },
+  {
+    "op": "add",
+    "path": "NestedList[Title eq \"Deep Nested 2\"].NestedDate",
+    "value": "2024-08-25T00:00:00Z"
+  }
+]

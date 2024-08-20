@@ -31,9 +31,40 @@ One difference between SCIM PATCH and JSON Patch is that SCIM servers do not sup
 
 ## Installation
 
-TODO
+Install latest version via package manager:
+
+```
+dotnet add package ScimPatch
+```
 
 ## Usage
+
+For a json with an array of operations:
+```json
+[
+  {
+    "op": "add",
+    "path": "IntProperty",
+    "value": 123
+  },
+  {
+    "op": "remove",
+    "path": "NullableBoolProperty"
+  }
+]
+```
+We just need to parse to the equivalent OperationNodes:
+```csharp
+List<bool> results = [];
+var operations = OperationTracker.FromJson(targetObject, json);
+foreach (var operationNode in operations)
+{
+    results.Add(await operationNode.TryApplyAsync());
+}
+```
+After that, the targetObject will have all modifications in memory.
+
+You can code your models (target objects) such that it keeks the state of modified properties so you only persist on your storage what is necessary.
 
 For more detailed examples, refer to the samples project at the [repository page](https://github.com/guilhermecamara/scim-patch-dotnet).
 

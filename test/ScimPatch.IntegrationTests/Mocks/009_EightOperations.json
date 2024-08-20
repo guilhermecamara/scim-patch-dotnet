@@ -1,0 +1,39 @@
+[
+  {
+    "op": "add",
+    "path": "StringProperty",
+    "value": "Final String"
+  },
+  {
+    "op": "remove",
+    "path": "NullableIntList"
+  },
+  {
+    "op": "add",
+    "path": "NestedObject.NestedList[NestedInt gt 19].NestedInt",
+    "value": 9
+  },
+  {
+    "op": "add",
+    "path": "StringList",
+    "value": "New String in List"
+  },
+  {
+    "op": "remove",
+    "path": "LongProperty"
+  },
+  {
+    "op": "add",
+    "path": "BoolProperty",
+    "value": false
+  },
+  {
+    "op": "remove",
+    "path": "NestedList[not(Title co \"2\")].NestedDate"
+  },
+  {
+    "op": "add",
+    "path": "NestedList[Title gt \"Deep Nested 1\"].Title",
+    "value": "Another Added Title"
+  }
+]

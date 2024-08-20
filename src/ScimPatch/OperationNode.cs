@@ -104,25 +104,25 @@ namespace ScimPatch
             if (!string.IsNullOrEmpty(filter))
                 throw new InvalidOperationException("Last path cannot have filter for add operations");
             
-            var targetPropertyInfo = instance.GetType().GetProperty(targetPropertyName)
-                                     ?? throw new ArgumentException(targetPropertyName);
-            
-            // Value
-            object? value = null;
-            if (Utils.IsIList(targetPropertyInfo.PropertyType))
-            {
-                var type = targetPropertyInfo.PropertyType.GetGenericArguments()[0];
-                value = operation.Value!.ToObject(type);
-            }
-            else
-            {
-                value = operation.Value!.ToObject(targetPropertyInfo.PropertyType);
-            }
-            
-            // Nodes
             var operationNodes = new List<OperationNode>();
             foreach (var targetObject in targetObjects)
             {
+                var targetPropertyInfo = targetObject.GetType().GetProperty(targetPropertyName)
+                                         ?? throw new ArgumentException(targetPropertyName);
+                
+                // Value
+                object? value = null;
+                if (Utils.IsIList(targetPropertyInfo.PropertyType))
+                {
+                    var type = targetPropertyInfo.PropertyType.GetGenericArguments()[0];
+                    value = operation.Value!.ToObject(type);
+                }
+                else
+                {
+                    value = operation.Value!.ToObject(targetPropertyInfo.PropertyType);
+                }
+                
+                // Nodes
                 operationNodes.Add(new OperationNode(
                     operationStrategy!,
                     targetObject,
@@ -147,20 +147,18 @@ namespace ScimPatch
             var (targetObjects, lastPath) = GetTargetObjects(operation.Path, instance);
 
             var (targetPropertyName, filter) = lastPath.GetRootPath();
-            
-            var targetPropertyInfo = instance.GetType().GetProperty(targetPropertyName)
-                                     ?? throw new ArgumentException(targetPropertyName);
-            
-            // Value
-            
-            // This is always null for remove except on list with filter on last path
-            object? value = null;
-            
-            // Nodes
+
             var operationNodes = new List<OperationNode>();
-            if (!string.IsNullOrEmpty(filter))
+            foreach (var targetObject in targetObjects)
             {
-                foreach (var targetObject in targetObjects)
+                var targetPropertyInfo = targetObject.GetType().GetProperty(targetPropertyName)
+                                         ?? throw new ArgumentException(targetPropertyName);
+                
+                // Value
+                // This is always null for remove except on list with filter on last path
+                object? value = null;
+                
+                if (!string.IsNullOrEmpty(filter))
                 {
                     var filteredTargetObjects = targetObject.GetProperties(new string[] { lastPath });
 
@@ -169,6 +167,7 @@ namespace ScimPatch
                     // so that list.Remove(o) removes the filtered objects
                     if (Utils.IsIList(targetPropertyInfo.PropertyType))
                     {
+                        // Nodes
                         foreach (var filteredTargetObject in filteredTargetObjects)
                         {
                             operationNodes.Add(new OperationNode(
@@ -181,10 +180,7 @@ namespace ScimPatch
                         }
                     }
                 }
-            }
-            else
-            {
-                foreach (var targetObject in targetObjects)
+                else
                 {
                     operationNodes.Add(new OperationNode(
                         operationStrategy!,
@@ -195,7 +191,7 @@ namespace ScimPatch
                     ));
                 }
             }
-            
+
             return operationNodes;
         }
 

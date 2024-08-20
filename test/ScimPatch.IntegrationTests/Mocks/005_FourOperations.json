@@ -1,0 +1,20 @@
+[
+  {
+    "op": "add",
+    "path": "DateProperty",
+    "value": "2024-08-20T00:00:00Z"
+  },
+  {
+    "op": "remove",
+    "path": "NullableIntList"
+  },
+  {
+    "op": "add",
+    "path": "LongProperty",
+    "value": 9999999999
+  },
+  {
+    "op": "remove",
+    "path": "NestedList[Title eq \"Deep Nested 2\"].NestedDate"
+  }
+]

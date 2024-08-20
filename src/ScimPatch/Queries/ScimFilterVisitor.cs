@@ -337,8 +337,11 @@ namespace ScimPatch.Queries
 
             string propNameToken = context.ATTRNAME(0).GetText();
             var argument = Expression.Parameter(typeof(TResource));
-            PropertyInfo propertyInfo = GetPropertyInfoFromCache(typeof(TResource), propNameToken);
 
+            if (propNameToken == "this")
+                return Expression.Lambda(argument, argument);
+            
+            PropertyInfo propertyInfo = GetPropertyInfoFromCache(typeof(TResource), propNameToken);
             return Expression.Lambda(Expression.Property(argument, propertyInfo), argument);
         }
 /*
@@ -416,21 +419,19 @@ namespace ScimPatch.Queries
 
             if (operatorToken.Equals("eq"))
             {
-                int intValue;
-                if (propertyType == typeof(int) && int.TryParse(valueToken, out intValue))
+                if ((propertyType == typeof(int) || propertyType == typeof(int?)) && int.TryParse(valueToken, out var intValue))
                 {
-                    return Expression.Equal(left, Expression.Constant(intValue));
+                    return Expression.Equal(left, Expression.Constant(intValue, propertyType));
                 }
 
-                bool boolValue;
-                if (propertyType == typeof(bool) && bool.TryParse(valueToken, out boolValue))
+                if ((propertyType == typeof(bool) || propertyType == typeof(bool?)) && bool.TryParse(valueToken, out var boolValue))
                 {
-                    return Expression.Equal(left, Expression.Constant(boolValue));
+                    return Expression.Equal(left, Expression.Constant(boolValue, propertyType));
                 }
                 
-                if (propertyType == typeof(DateTime))
+                if (propertyType == typeof(DateTime) || propertyType == typeof(DateTime?))
                 {
-                    return Expression.Equal(left, Expression.Constant(ParseDateTime(valueToken)));
+                    return Expression.Equal(left, Expression.Constant(ParseDateTime(valueToken), propertyType));
                 }
 
                 if (propertyType != typeof(string))
@@ -451,21 +452,19 @@ namespace ScimPatch.Queries
             // Not Equal
             if (operatorToken.Equals("ne"))
             {
-                int intValue;
-                if (propertyType == typeof(int) && int.TryParse(valueToken, out intValue))
+                if ((propertyType == typeof(int) || propertyType == typeof(int?)) && int.TryParse(valueToken, out var intValue))
                 {
-                    return Expression.NotEqual(left, Expression.Constant(intValue));
+                    return Expression.NotEqual(left, Expression.Constant(intValue, propertyType));
                 }
 
-                bool boolValue;
-                if (propertyType == typeof(bool) && bool.TryParse(valueToken, out boolValue))
+                if ((propertyType == typeof(bool) || propertyType == typeof(bool?)) && bool.TryParse(valueToken, out var boolValue))
                 {
-                    return Expression.NotEqual(left, Expression.Constant(boolValue));
+                    return Expression.NotEqual(left, Expression.Constant(boolValue, propertyType));
                 }
                 
-                if (propertyType == typeof(DateTime))
+                if (propertyType == typeof(DateTime) || propertyType == typeof(DateTime?))
                 {
-                    return Expression.NotEqual(left, Expression.Constant(ParseDateTime(valueToken)));
+                    return Expression.NotEqual(left, Expression.Constant(ParseDateTime(valueToken), propertyType));
                 }
 
                 if (propertyType != typeof(string))
@@ -538,23 +537,21 @@ namespace ScimPatch.Queries
             // Greater Than
             if (operatorToken.Equals("gt"))
             {
-                int intValue;
-                if (propertyType == typeof(int) && int.TryParse(valueToken, out intValue))
+                if ((propertyType == typeof(int) || propertyType == typeof(int?)) && int.TryParse(valueToken, out var intValue))
                 {
-                    return Expression.GreaterThan(left, Expression.Constant(intValue));
+                    return Expression.GreaterThan(left, Expression.Constant(intValue, propertyType));
                 }
 
-                bool boolValue;
-                if (propertyType == typeof(bool) && bool.TryParse(valueToken, out boolValue))
+                if ((propertyType == typeof(bool) || propertyType == typeof(bool?)) && bool.TryParse(valueToken, out var boolValue))
                 {
-                    return Expression.GreaterThan(left, Expression.Constant(boolValue));
+                    return Expression.GreaterThan(left, Expression.Constant(boolValue, propertyType));
                 }
                 
-                if (propertyType == typeof(DateTime))
+                if (propertyType == typeof(DateTime) || propertyType == typeof(DateTime?))
                 {
-                    return Expression.GreaterThan(left, Expression.Constant(ParseDateTime(valueToken)));
+                    return Expression.GreaterThan(left, Expression.Constant(ParseDateTime(valueToken), propertyType));
                 }
-                
+
                 if (propertyType == typeof(string))
                 {
                     var method = MethodCache["compareto"];
@@ -570,21 +567,19 @@ namespace ScimPatch.Queries
             // Greater Than or Equal
             if (operatorToken.Equals("ge"))
             {
-                int intValue;
-                if (propertyType == typeof(int) && int.TryParse(valueToken, out intValue))
+                if ((propertyType == typeof(int) || propertyType == typeof(int?)) && int.TryParse(valueToken, out var intValue))
                 {
-                    return Expression.GreaterThanOrEqual(left, Expression.Constant(intValue));
+                    return Expression.GreaterThanOrEqual(left, Expression.Constant(intValue, propertyType));
                 }
 
-                bool boolValue;
-                if (propertyType == typeof(bool) && bool.TryParse(valueToken, out boolValue))
+                if ((propertyType == typeof(bool) || propertyType == typeof(bool?)) && bool.TryParse(valueToken, out var boolValue))
                 {
-                    return Expression.GreaterThanOrEqual(left, Expression.Constant(boolValue));
+                    return Expression.GreaterThanOrEqual(left, Expression.Constant(boolValue, propertyType));
                 }
                 
-                if (propertyType == typeof(DateTime))
+                if (propertyType == typeof(DateTime) || propertyType == typeof(DateTime?))
                 {
-                    return Expression.GreaterThanOrEqual(left, Expression.Constant(ParseDateTime(valueToken)));
+                    return Expression.GreaterThanOrEqual(left, Expression.Constant(ParseDateTime(valueToken), propertyType));
                 }
                 
                 if (propertyType == typeof(string))
@@ -602,21 +597,19 @@ namespace ScimPatch.Queries
             // Less Than
             if (operatorToken.Equals("lt"))
             {
-                int intValue;
-                if (propertyType == typeof(int) && int.TryParse(valueToken, out intValue))
+                if ((propertyType == typeof(int) || propertyType == typeof(int?)) && int.TryParse(valueToken, out var intValue))
                 {
-                    return Expression.LessThan(left, Expression.Constant(intValue));
+                    return Expression.LessThan(left, Expression.Constant(intValue, propertyType));
                 }
 
-                bool boolValue;
-                if (propertyType == typeof(bool) && bool.TryParse(valueToken, out boolValue))
+                if ((propertyType == typeof(bool) || propertyType == typeof(bool?)) && bool.TryParse(valueToken, out var boolValue))
                 {
-                    return Expression.LessThan(left, Expression.Constant(boolValue));
+                    return Expression.LessThan(left, Expression.Constant(boolValue, propertyType));
                 }
                 
-                if (propertyType == typeof(DateTime))
+                if (propertyType == typeof(DateTime) || propertyType == typeof(DateTime?))
                 {
-                    return Expression.LessThan(left, Expression.Constant(ParseDateTime(valueToken)));
+                    return Expression.LessThan(left, Expression.Constant(ParseDateTime(valueToken), propertyType));
                 }
 
                 if (propertyType == typeof(string))
@@ -634,21 +627,19 @@ namespace ScimPatch.Queries
             // Less Than or Equal
             if (operatorToken.Equals("le"))
             {
-                int intValue;
-                if (propertyType == typeof(int) && int.TryParse(valueToken, out intValue))
+                if ((propertyType == typeof(int) || propertyType == typeof(int?)) && int.TryParse(valueToken, out var intValue))
                 {
-                    return Expression.LessThanOrEqual(left, Expression.Constant(intValue));
+                    return Expression.LessThanOrEqual(left, Expression.Constant(intValue, propertyType));
                 }
 
-                bool boolValue;
-                if (propertyType == typeof(bool) && bool.TryParse(valueToken, out boolValue))
+                if ((propertyType == typeof(bool) || propertyType == typeof(bool?)) && bool.TryParse(valueToken, out var boolValue))
                 {
-                    return Expression.LessThanOrEqual(left, Expression.Constant(boolValue));
+                    return Expression.LessThanOrEqual(left, Expression.Constant(boolValue, propertyType));
                 }
                 
-                if (propertyType == typeof(DateTime))
+                if (propertyType == typeof(DateTime) || propertyType == typeof(DateTime?))
                 {
-                    return Expression.LessThanOrEqual(left, Expression.Constant(ParseDateTime(valueToken)));
+                    return Expression.LessThanOrEqual(left, Expression.Constant(ParseDateTime(valueToken), propertyType));
                 }
 
                 if (propertyType == typeof(string))

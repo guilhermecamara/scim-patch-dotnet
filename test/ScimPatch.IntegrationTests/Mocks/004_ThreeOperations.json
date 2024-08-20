@@ -1,0 +1,16 @@
+[
+  {
+    "op": "add",
+    "path": "NestedObject.Title",
+    "value": "Nested Name"
+  },
+  {
+    "op": "add",
+    "path": "NestedList[Title eq \"Deep Nested 1\"].Title",
+    "value": "Title 1"
+  },
+  {
+    "op": "remove",
+    "path": "StringList[this eq \"Item2\"]"
+  }
+]
