@@ -71,7 +71,24 @@ public class OperationNodeTests
         node.TargetProperty.Should().BeSameAs(root.GetType().GetProperty("Items"));
         node.Instance.Should().BeSameAs(root);
     }
+    
+    [TestMethod]
+    public void FromOperation_ShouldThrowExceptionForInvalidPath_ForAddOperation()
+    {
+        // Arrange
+        var root = Root.MockRoot();
+        var operation = new Operation
+        {
+            OperationType = OperationType.Add,
+            Path = "InvalidPath"
+        };
 
+        // Act & Assert
+        var ex = Assert.ThrowsException<ArgumentException>(() => OperationNode.FromOperation(operation, root));
+        Assert.AreEqual("Property not found in target object of type ScimPatch.UnitTests.Root (Parameter 'InvalidPath')", ex.Message);
+        Assert.AreEqual("InvalidPath", ex.ParamName);
+    }
+    
     #endregion
     
     #region Remove
@@ -150,22 +167,24 @@ public class OperationNodeTests
         node.Instance.Should().BeSameAs(root);
     }
     
-    #endregion
-    
     [TestMethod]
-    public void FromOperation_ShouldThrowExceptionForInvalidPath()
+    public void FromOperation_ShouldThrowExceptionForInvalidPath_ForRemoveOperation()
     {
         // Arrange
         var root = Root.MockRoot();
         var operation = new Operation
         {
-            OperationType = OperationType.Add,
+            OperationType = OperationType.Remove,
             Path = "InvalidPath"
         };
 
         // Act & Assert
-        Assert.ThrowsException<ArgumentException>(() => OperationNode.FromOperation(operation, root));
+        var ex = Assert.ThrowsException<ArgumentException>(() => OperationNode.FromOperation(operation, root));
+        Assert.AreEqual("Property not found in target object of type ScimPatch.UnitTests.Root (Parameter 'InvalidPath')", ex.Message);
+        Assert.AreEqual("InvalidPath", ex.ParamName);
     }
+    
+    #endregion
     
     [TestMethod]
     public void GetTargetObjects_ShouldReturnCorrectObjectsAndPath()

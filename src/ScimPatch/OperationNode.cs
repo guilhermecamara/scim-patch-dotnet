@@ -108,7 +108,9 @@ namespace ScimPatch
             foreach (var targetObject in targetObjects)
             {
                 var targetPropertyInfo = targetObject.GetType().GetProperty(targetPropertyName)
-                                         ?? throw new ArgumentException(targetPropertyName);
+                                         ?? throw new ArgumentException(
+                                             $"Property not found in target object of type {targetObject.GetType().FullName}",
+                                             targetPropertyName);
                 
                 // Value
                 object? value = null;
@@ -152,7 +154,9 @@ namespace ScimPatch
             foreach (var targetObject in targetObjects)
             {
                 var targetPropertyInfo = targetObject.GetType().GetProperty(targetPropertyName)
-                                         ?? throw new ArgumentException(targetPropertyName);
+                                         ?? throw new ArgumentException(
+                                             $"Property not found in target object of type {targetObject.GetType().FullName}",
+                                             targetPropertyName);
                 
                 // Value
                 // This is always null for remove except on list with filter on last path
