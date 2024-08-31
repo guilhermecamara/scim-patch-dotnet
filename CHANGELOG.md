@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
+<a name="2.0.2"></a>
+## 2.0.2 (2024-08-31)
+
+### Bug Fixes
+
+* default to use ObservableCollection instead of List on Deserialization and on Add operations
+
 <a name="2.0.1"></a>
 ## 2.0.1 (2024-08-22)
 
