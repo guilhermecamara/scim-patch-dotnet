@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using ScimPatch.Converters;
 
 namespace ScimPatch
 {
@@ -20,6 +21,7 @@ namespace ScimPatch
                 DateParseHandling = DateParseHandling.None,
                 Converters =
                 {
+                    new ObservableCollectionConverter(),
                     new IsoDateTimeConverter { DateTimeStyles = DateTimeStyles.AssumeUniversal }
                 },
             };

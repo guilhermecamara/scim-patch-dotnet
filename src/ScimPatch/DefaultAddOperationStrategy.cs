@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 namespace ScimPatch
@@ -18,7 +19,7 @@ namespace ScimPatch
             if (Utils.IsIList(operationNode.TargetProperty.PropertyType))
             {
                 var type = operationNode.TargetProperty.PropertyType.GetGenericArguments()[0];
-                var listType = typeof(List<>);
+                var listType = typeof(ObservableCollection<>);
                 var list = (IList?)operationNode.TargetProperty.GetValue(operationNode.Instance);
                 if (list == null)
                 {
